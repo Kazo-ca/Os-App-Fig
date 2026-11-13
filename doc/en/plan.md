@@ -171,6 +171,28 @@ Findings:
 
 Tests: 96 xUnit tests and the 8 Playwright journeys in the OS, green with the source build.
 
+## Work item 4: the Store (2026-11-13)
+
+Kazo OS 3.3.3 (module `Kazo.Os.AppSdk.Craft`) is published on nuget.org and tagged `v3.3.3`: the
+submodule was already on it (`b5bb8af`).
+
+- **CI on the Release profile of the nuget.org packages**: `KAZOOS_BRANCH` and `KAZOOS_USE_SOURCE`
+  removed, the check script only knows the tag (like Kazo Spreadsheets).
+- **Store listing** fr and en (`store/`), crediting FigCraft by the ArtCraft team and giving the
+  known limits; icon `store/icon.png` rendered from `wwwroot/icons/app.svg` (no ArtCraft logo);
+  three screenshots taken in the published Kazo OS 3.3.3 with FigCraft's starter templates
+  (`mobile-app`, `dashboard`, through `file.newFromTemplate`) and the File Explorer.
+- **README** rebuilt on the listing (`npm run store:readme`, checked by CI), "Try it" link
+  `https://os.kazo.ca/?autolaunch=ca.kazo.fig`.
+- **`THIRD-PARTY-NOTICES.md`** (fr, en), linked with `LICENSE` into the package (`wwwroot/legal/`)
+  next to FigCraft's notices (including the 29 OFL licenses); `LegalFilesTests`.
+- **`tests/installed`**: `kazopkg install` in the published Kazo OS 3.3.3, a `.figcraft` saved then
+  reopened by double-click, licenses present, Store screenshots: PASS. `.kazoapp` package of
+  10.7 MB, 25.9 MB unpacked.
+- Version **0.1.0**. After Benoit merges `fig/base` into `main`: tag `v0.1.0` ("Tag a release"
+  workflow), catalog PR in `Os-AppMarketPlace`, then `npm run test:installed -- --store` and the
+  Kazo OS `features.md` row.
+
 ## Upstream track
 
 Texts prepared by Claude in English, published by Benoit (no agent mention, `storytold` repository
@@ -187,4 +209,5 @@ rules):
 - [x] Work item 1 (`fig/1-solution`): solution, manifest, 0.18.1 zip, start-up window on the module, CI on `main`.
 - [x] Work item 2 (`fig/2-window`): formats, tabs bound to their file, save, Save as, copies, close, picker, per-user storage.
 - [x] Work item 3 (`fig/3-build-from-source`): fork as submodule, build with `craft-fonts`, workflow, page built from source.
-- [ ] Work item 4.
+- [x] Work item 4 (`fig/4-store`): OS 3.3.3 in Release, listing, icon, screenshots, README, third-party notices, install in the published OS.
+- [ ] Publication: `main`, tag `v0.1.0`, catalog, `features.md`.

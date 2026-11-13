@@ -1,11 +1,6 @@
 # Builds and tests the Release profile: the Kazo OS packages from nuget.org, at the version of the
 # submodule (ADR 0176 §4, §6). This is what the Kazo OS Store compiles.
 #
-# Until the Kazo OS release that contains the Kazo.Os.AppSdk.Craft module (doc/en/plan.md,
-# decision 2) is tagged (v3.3.3), the submodule sits on a commit of main and the Release build takes the Kazo OS
-# projects from it (KazoOsUseSource=true): the module is not on nuget.org yet. Work item 4 puts
-# the submodule on the release tag and removes KAZOOS_BRANCH and KAZOOS_USE_SOURCE.
-#
 # workflow_call: the Build FigCraft workflow (work item 3) calls it on the branch it pushes,
 # since a push made with the workflow token starts no workflow.
 name: CI
@@ -28,10 +23,6 @@ concurrency:
   group: "ci-${{ inputs.ref || github.ref }}"
   cancel-in-progress: true
 
-env:
-  KAZOOS_BRANCH: main
-  KAZOOS_USE_SOURCE: "true"
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -51,8 +42,11 @@ jobs:
       - name: Check the Kazo OS submodule
         run: bash .github/scripts/check-kazoos-submodule.sh
 
+      - name: Check the README shows the Store listing
+        run: node .github/scripts/store-readme.mjs --check
+
       - name: Build (Release)
-        run: dotnet build -c Release -p:KazoOsUseSource=$KAZOOS_USE_SOURCE
+        run: dotnet build -c Release
 
       - name: Test
-        run: dotnet test -c Release --no-build -p:KazoOsUseSource=$KAZOOS_USE_SOURCE
+        run: dotnet test -c Release --no-build

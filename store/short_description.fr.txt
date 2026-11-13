@@ -1,1 +1,1 @@
-Une app fenêtrée Kazo OS créée avec le modèle kazoos-solution.
+Design d'interfaces et prototypage pour les fichiers .figcraft, basé sur FigCraft de l'équipe ArtCraft.
