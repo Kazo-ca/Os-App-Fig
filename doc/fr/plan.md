@@ -61,8 +61,12 @@ commit) et sur le zip officiel `figcraft-web-0.18.1.zip`.
 | 4 | Changer d'écran | `canChangeScreen: false` dans le bloc `window` du manifeste dès le chantier 1 (issue #2). |
 | 5 | Provenance du build | Comme Kazo Spreadsheets : d'abord le **zip officiel 0.18.1** épinglé par SHA-256, dans le dépôt sous `wwwroot/figcraft/` avec `figcraft.json` ; puis compilé depuis le fork (chantier 3, branche `kazo/v0.18.1` = `4acc293`, avec `craft-fonts`). |
 | 6 | Enregistrer sous | Rien à contourner : FigCraft dit `saveAs` lui-même, et son Ctrl+Maj+S passe par son propre Enregistrer sous. Pas de touche réservée en plus de celles de l'OS et de Ctrl+N. |
+| 7 | Plusieurs onglets | **Q1 = A** (Benoit, 2026-11-13) : la fenêtre lie chaque fichier à l'onglet (`id` de `doc.list`) ; un `save` venu d'un autre onglet est un Enregistrer sous (dialogue de l'OS) ; issue et PR amont préparées par Claude, publiées par Benoit. |
+| 8 | Formats associés | **Q2 = A** (Benoit, 2026-11-13) : app par défaut pour `.figcraft .fig .sketch .penpot .jam` ; « Ouvrir avec » pour `.svg`, `.json` et les images. |
 
 ## Questions posées à Benoit
+
+Répondues le 2026-11-13 : « Le reste je suis d'accord avec tes recommandations » (A et A).
 
 **Q1. Plusieurs onglets dans une fenêtre.** Si l'utilisateur crée un nouveau design dans une fenêtre
 qui a déjà un fichier ouvert, FigCraft envoie l'Enregistrer de ce nouvel onglet sous le nom du
@@ -114,7 +118,7 @@ dépôts `storytold`) :
 
 - [x] Étape 0 : lecture de FigCraft 0.18.1 et du zip officiel.
 - [x] Plan fr et en.
-- [ ] Réponses de Benoit à Q1 et Q2.
+- [x] Réponses de Benoit à Q1 et Q2 (A et A).
 - [ ] Chantier 1.
 - [ ] Chantier 2.
 - [ ] Chantier 3.

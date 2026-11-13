@@ -61,8 +61,12 @@ hold that commit) and on the official zip `figcraft-web-0.18.1.zip`.
 | 4 | Changing screens | `canChangeScreen: false` in the manifest's `window` block from work item 1 (issue #2). |
 | 5 | Build provenance | As Kazo Spreadsheets: first the **official 0.18.1 zip** pinned by SHA-256, in the repository under `wwwroot/figcraft/` with `figcraft.json`; then built from the fork (work item 3, branch `kazo/v0.18.1` = `4acc293`, with `craft-fonts`). |
 | 6 | Save As | Nothing to work around: FigCraft says `saveAs` itself, and its Ctrl+Shift+S goes through its own Save As. No reserved key beyond the OS ones and Ctrl+N. |
+| 7 | Several tabs | **Q1 = A** (Benoit, 2026-11-13): the window binds each file to the tab (`doc.list`'s `id`); a `save` from another tab is a Save As (OS dialog); upstream issue and PR prepared by Claude, published by Benoit. |
+| 8 | Associated formats | **Q2 = A** (Benoit, 2026-11-13): default app for `.figcraft .fig .sketch .penpot .jam`; "Open with" for `.svg`, `.json` and pictures. |
 
 ## Questions asked to Benoit
+
+Answered on 2026-11-13: "for the rest I agree with your recommendations" (A and A).
 
 **Q1. Several tabs in one window.** If the user creates a new design in a window that already has
 an opened file, FigCraft sends that new tab's Save under the opened file's name, with no `saveAs`.
@@ -113,7 +117,7 @@ rules):
 
 - [x] Step 0: reading FigCraft 0.18.1 and the official zip.
 - [x] Plan fr and en.
-- [ ] Benoit's answers to Q1 and Q2.
+- [x] Benoit's answers to Q1 and Q2 (A and A).
 - [ ] Work item 1.
 - [ ] Work item 2.
 - [ ] Work item 3.
