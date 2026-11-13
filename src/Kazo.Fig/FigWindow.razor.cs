@@ -9,16 +9,17 @@ using Microsoft.JSInterop;
 namespace Kazo.Fig;
 
 /// <summary>
-/// The Kazo Fig window (doc/en/plan.md, work item 1): FigCraft in an iframe started by the Kazo OS
+/// The Kazo Fig window (doc/en/plan.md, work items 1 and 2): FigCraft in an iframe started by the Kazo OS
 /// module <c>Kazo.Os.AppSdk.Craft</c> (<see cref="CraftFrame"/>), with a loading screen until it is
 /// ready and an error screen with "Retry" when it fails or does not answer within
 /// <see cref="FrameStartup.Timeout"/>.
 /// </summary>
 /// <remarks>
-/// Once FigCraft is ready the window gives it the OS theme and the user's language, then leaves its
-/// home screen for a blank design. Opening, saving, the close guard, the file picker and the
-/// per-user settings come with work item 2. The launch argument <c>--webgl</c> forces FigCraft's
-/// WebGL 2 renderer, to try it without WebGPU.
+/// Once FigCraft is ready the window gives it the OS theme and the user's language, then opens the
+/// file it was started for, or a blank design. Opening, saving, Save as and the close guard are in
+/// <c>FigWindow.Documents.cs</c>; the file picker, chords, storage, theme and language in
+/// <c>FigWindow.Proxy.cs</c>. The launch argument <c>--webgl</c> forces FigCraft's WebGL 2
+/// renderer, to try it without WebGPU.
 /// </remarks>
 public sealed partial class FigWindow : IAsyncDisposable
 {
@@ -44,6 +45,10 @@ public sealed partial class FigWindow : IAsyncDisposable
     {
         CancelTimeout();
         await StopFrameAsync();
+        await FlushSettingsAsync();
+        _nextSaveStarted?.TrySetResult();
+        _nextSave?.TrySetResult(false);
+        _saveGate.Dispose();
     }
 
     /// <inheritdoc />
@@ -51,7 +56,7 @@ public sealed partial class FigWindow : IAsyncDisposable
     protected override async Task OnAppInitializedAsync()
     {
         _request = OpenRequest.FromArguments(LaunchArguments);
-        await SetWindowTitleAsync($"{L["Untitled"]} — Kazo Fig");
+        await SetWindowTitleAsync(DocumentTitle);
     }
 
     /// <inheritdoc />
@@ -78,13 +83,15 @@ public sealed partial class FigWindow : IAsyncDisposable
         CraftFrame frame = new(JavaScript);
         frame.Ready += OnReadyAsync;
         frame.Failed += OnFailedAsync;
-        frame.SchemeChanged += OnSchemeChangedAsync;
+        frame.DirtyChanged += OnDirtyChangedAsync;
+        frame.Saving += OnSavingAsync;
+        ConnectProxy(frame, connect: true);
         _frame = frame;
         ArmTimeout(_startup.Attempt);
 
         try
         {
-            await frame.StartAsync(_frameHost, FrameOptions(), AppContext.CancellationToken);
+            await frame.StartAsync(_frameHost, await FrameOptionsAsync(), AppContext.CancellationToken);
         }
         catch (Exception exception) when (exception is JSException or InvalidOperationException)
         {
@@ -93,13 +100,15 @@ public sealed partial class FigWindow : IAsyncDisposable
     }
 
     // FigCraft's page, its language, the user's name for comments and board notes, the WebGL 2
-    // switch, the control channel the proxy drives FigCraft with, and the chords the OS keeps.
-    private CraftFrameOptions FrameOptions() =>
+    // switch, the control channel the proxy drives FigCraft with, the chords the window keeps, and
+    // the user's FigCraft storage.
+    private async Task<CraftFrameOptions> FrameOptionsAsync() =>
         new(CraftFrameOptions.PagePathOf(typeof(FigWindow).Assembly.GetName().Name!), L["EditorLabel"])
         {
             Language = FigCraftLanguage.Of(AppContext.Culture),
             Parameters = FigCraftParameters.For(AppContext.UserDisplayName, _request.WebGl),
-            ReservedKeys = ReservedKeys.All,
+            ReservedKeys = FigKeys.All,
+            Settings = await LoadSettingsAsync(),
         };
 
     private async Task StopFrameAsync()
@@ -111,7 +120,9 @@ public sealed partial class FigWindow : IAsyncDisposable
 
         _frame.Ready -= OnReadyAsync;
         _frame.Failed -= OnFailedAsync;
-        _frame.SchemeChanged -= OnSchemeChangedAsync;
+        _frame.DirtyChanged -= OnDirtyChangedAsync;
+        _frame.Saving -= OnSavingAsync;
+        ConnectProxy(_frame, connect: false);
         await _frame.DisposeAsync();
         _frame = null;
     }
@@ -139,16 +150,11 @@ public sealed partial class FigWindow : IAsyncDisposable
             return;
         }
 
-        await OnSchemeChangedAsync(await frame.GetColorSchemeAsync());
-        await ExecuteAsync(frame, "pref.language", new { language = FigCraftLanguage.Of(AppContext.Culture) });
-
-        // In host mode FigCraft starts on its home screen with no design: the window opens a blank
-        // one, as a desktop editor does. Work item 2 opens the requested file instead when there is one.
-        await ExecuteAsync(frame, "file.new", new { });
-        await frame.RequestAsync("ui.set", new { home = false }, cancellationToken: AppContext.CancellationToken);
-        if (IsWindowActive)
+        await ApplyThemeAndLanguageAsync(frame);
+        await PrepareDocumentAsync(frame);
+        if (_frame is { } ready && IsWindowActive)
         {
-            await frame.FocusAsync();
+            await ready.FocusAsync();
         }
     }
 
@@ -158,16 +164,6 @@ public sealed partial class FigWindow : IAsyncDisposable
         {
             CancelTimeout();
             await InvokeAsync(StateHasChanged);
-        }
-    }
-
-    // FigCraft follows the OS theme: "light" or "dark" (FigCraft's own "system" would follow the
-    // browser, not Kazo OS).
-    private async Task OnSchemeChangedAsync(string scheme)
-    {
-        if (_frame is { } frame)
-        {
-            await frame.RequestAsync("ui.set", new { theme = FigCraftTheme.Of(scheme) }, cancellationToken: AppContext.CancellationToken);
         }
     }
 

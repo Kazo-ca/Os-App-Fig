@@ -36,4 +36,70 @@
   <data name="Untitled" xml:space="preserve">
     <value>Untitled</value>
   </data>
+  <data name="PickDesignTitle" xml:space="preserve">
+    <value>Open a design</value>
+  </data>
+  <data name="PickFileTitle" xml:space="preserve">
+    <value>Choose a file</value>
+  </data>
+  <data name="DesignsFilter" xml:space="preserve">
+    <value>Designs and images</value>
+  </data>
+  <data name="FilesFilter" xml:space="preserve">
+    <value>Files FigCraft accepts</value>
+  </data>
+  <data name="AllFiles" xml:space="preserve">
+    <value>All files</value>
+  </data>
+  <data name="ProblemTitle" xml:space="preserve">
+    <value>Kazo Fig</value>
+  </data>
+  <data name="ReadFailed" xml:space="preserve">
+    <value>{0} could not be read: {1}</value>
+  </data>
+  <data name="NewWindowFailed" xml:space="preserve">
+    <value>A new Kazo Fig window could not be opened: {0}</value>
+  </data>
+  <data name="SaveTitle" xml:space="preserve">
+    <value>Save the design</value>
+  </data>
+  <data name="SaveCopyTitle" xml:space="preserve">
+    <value>Save a copy</value>
+  </data>
+  <data name="FilterFormat" xml:space="preserve">
+    <value>{0} file</value>
+  </data>
+  <data name="OpenFailed" xml:space="preserve">
+    <value>Could not open {0}: {1}</value>
+  </data>
+  <data name="NotConnected" xml:space="preserve">
+    <value>FigCraft is not running.</value>
+  </data>
+  <data name="NotOpened" xml:space="preserve">
+    <value>FigCraft did not open it.</value>
+  </data>
+  <data name="NotSaved" xml:space="preserve">
+    <value>FigCraft did not hand the design over.</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>{0} was not saved: {1}. The design stays modified; the next save asks where to write it.</value>
+  </data>
+  <data name="SaveCancelled" xml:space="preserve">
+    <value>{0} was not saved. The design stays modified.</value>
+  </data>
+  <data name="CopySaved" xml:space="preserve">
+    <value>Copy saved: {0}.</value>
+  </data>
+  <data name="Dismiss" xml:space="preserve">
+    <value>Dismiss</value>
+  </data>
+  <data name="CloseTitle" xml:space="preserve">
+    <value>Unsaved changes</value>
+  </data>
+  <data name="CloseUnsaved" xml:space="preserve">
+    <value>Save the changes to {0} before closing? Yes saves, No closes without saving.</value>
+  </data>
+  <data name="CloseUnanswered" xml:space="preserve">
+    <value>FigCraft does not answer, so {0} cannot be saved. Close without saving?</value>
+  </data>
 </root>

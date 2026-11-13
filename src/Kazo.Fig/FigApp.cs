@@ -1,3 +1,4 @@
+using Kazo.Fig.Documents;
 using Kazo.Os.App.Abstractions;
 
 namespace Kazo.Fig;
@@ -7,9 +8,9 @@ namespace Kazo.Fig;
 /// this class (Kazo.Os.App.Build); it is never instantiated at run time.
 /// </summary>
 /// <remarks>
-/// Work item 1 declares the base: identity, the window and its size, several windows at once, and
-/// a window that stays on its screen (decision 4). Work item 2 adds the document formats (question
-/// Q2), the OS dialogs and the capabilities they need.
+/// Work item 1 declared the base: identity, the window and its size, several windows at once, and
+/// a window that stays on its screen (decision 4). Work item 2 adds the document formats (decision
+/// 8, <see cref="FigFormats"/>), the OS dialogs and the capabilities they need.
 /// </remarks>
 [AppManifest]
 public sealed class FigApp : AppDefinition
@@ -56,8 +57,28 @@ public sealed class FigApp : AppDefinition
     public override bool SingleInstancePerUser => false;
 
     /// <inheritdoc />
-    /// <remarks>Work item 1 reads no file and opens no dialog; work item 2 adds what it needs.</remarks>
-    public override IReadOnlyList<string> Capabilities => [];
+    /// <remarks>
+    /// The OS Open and Save dialogs, the user's files (a file chosen in a dialog outside the home
+    /// folder is reached through the dialog's grant), <c>apps.launch</c> to open a file in another
+    /// window, and the private folder where FigCraft's storage lives (<c>~/.config/ca.kazo.fig/</c>).
+    /// </remarks>
+    public override IReadOnlyList<string> Capabilities =>
+    [
+        AppCapabilities.DialogFileOpen,
+        AppCapabilities.DialogFileSave,
+        AppCapabilities.FileSystemUserHomeRead,
+        AppCapabilities.FileSystemUserHomeWrite,
+        AppCapabilities.FileSystemPrivateRead,
+        AppCapabilities.FileSystemPrivateWrite,
+        AppCapabilities.AppsLaunch,
+    ];
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// The design files with <c>open</c> and <c>edit</c> (Kazo Fig becomes their app); SVG, JSON and
+    /// images with <c>open</c> only, for "Open with" (decision 8, Q2 = A).
+    /// </remarks>
+    public override IReadOnlyList<FileHandler> FileHandlers => FigFormats.FileHandlers;
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Icons => ["icons/app.svg"];

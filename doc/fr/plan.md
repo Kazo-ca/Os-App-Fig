@@ -60,7 +60,7 @@ commit) et sur le zip officiel `figcraft-web-0.18.1.zip`.
 | 3 | Intégration | Un iframe par fenêtre, page `wwwroot/host/index.html` avec le canevas `figcraft_canvas` `data-host="page"` `data-craft-app="figcraft"`, et `control` dans les paramètres de l'adresse. |
 | 4 | Changer d'écran | `canChangeScreen: false` dans le bloc `window` du manifeste dès le chantier 1 (issue #2). |
 | 5 | Provenance du build | Comme Kazo Spreadsheets : d'abord le **zip officiel 0.18.1** épinglé par SHA-256, dans le dépôt sous `wwwroot/figcraft/` avec `figcraft.json` ; puis compilé depuis le fork (chantier 3, branche `kazo/v0.18.1` = `4acc293`, avec `craft-fonts`). |
-| 6 | Enregistrer sous | Rien à contourner : FigCraft dit `saveAs` lui-même, et son Ctrl+Maj+S passe par son propre Enregistrer sous. Pas de touche réservée en plus de celles de l'OS et de Ctrl+N. |
+| 6 | Enregistrer sous | Révisée au chantier 2 : FigCraft dit `saveAs` lui-même, sauf pour l'Enregistrer sous de l'onglet dont le nom est celui du fichier ouvert (`Poster` → `Poster.figcraft`), remis avec `saveAs: false` comme un Enregistrer. La fenêtre réserve donc **Ctrl+Maj+S** (le raccourci de FigCraft) et lance elle-même Fichier › Enregistrer sous, qui demande toujours un nouveau fichier. Le même choix cliqué dans le menu reste un Enregistrer dans ce cas précis (limite connue, dans le ticket amont). |
 | 7 | Plusieurs onglets | **Q1 = A** (Benoit, 2026-11-13) : la fenêtre lie chaque fichier à l'onglet (`id` de `doc.list`) ; un `save` venu d'un autre onglet est un Enregistrer sous (dialogue de l'OS) ; issue et PR amont préparées par Claude, publiées par Benoit. |
 | 8 | Formats associés | **Q2 = A** (Benoit, 2026-11-13) : app par défaut pour `.figcraft .fig .sketch .penpot .jam` ; « Ouvrir avec » pour `.svg`, `.json` et les images. |
 
@@ -128,6 +128,33 @@ Constats :
 
 Tests : 34 tests xUnit (manifeste, provenance du build, page de l'iframe, textes fr et en, paramètres, langue, thème) et 3 parcours Playwright dans l'OS : WebGPU, thème sombre, design vide, clavier (R choisit le rectangle) ; WebGL 2 avec `--webgl` ; deux fenêtres avec chacune son design, et une fenêtre ramenée devant sans recharger aucun iframe (ADR 0244). Capture : `kazo-fig-work-item-1-webgl.png` dans les fichiers du projet (`fig/trials/`).
 
+## Chantier 2 : fenêtre complète (2026-11-13)
+
+| Fichier | Rôle |
+| --- | --- |
+| `Documents/FigFormats.cs` | formats (décision 8, Q2 = A) : app par défaut pour `.figcraft .fig .sketch .penpot .jam`, « Ouvrir avec » pour `.json .svg` et les images, `.pdf` en copie seulement ; la règle de FigCraft pour distinguer le design d'une copie (`.figcraft` ou `.json`, sauf `.variables.json`) ; le sélecteur Fichier › Ouvrir (le seul qui accepte `.json`) |
+| `Documents/FigTab.cs`, `Documents/FigTabs.cs` | les onglets lus dans `doc.list` (`id` = `uid` de FigCraft, stable) et leur fichier, lié par `id` (décision 7, Q1 = A) ; décision de chaque `save` selon l'onglet devant ; titre ; onglets à enregistrer avant de fermer |
+| `FigWindow.Documents.cs` | ouvrir (`figcraft:open`, puis le nouvel onglet de `doc.list` reçoit le fichier ; le design vide intact du départ est fermé), enregistrer, Enregistrer sous, copies, garde de fermeture |
+| `FigWindow.Proxy.cs`, `Hosting/FigKeys.cs` | sélecteur de fichiers de FigCraft remplacé par le dialogue de l'OS, Ctrl+N (nouvelle fenêtre), Ctrl+Maj+S (Enregistrer sous, décision 6 révisée), stockage par utilisateur, thème et langue |
+| `FigApp.cs` | capacités (dialogues, dossier personnel, dossier privé, `apps.launch`) et associations de fichiers |
+
+Comment la fenêtre décide d'un `save` (FigCraft ne garde qu'un fichier hôte par page) :
+
+- La fenêtre demande l'onglet devant (`doc.list`). Un nom autre que `.figcraft` ou `.json` est une **copie** : dialogue « Enregistrer une copie », l'onglet garde son fichier.
+- `saveAs: false` (Fichier › Enregistrer de FigCraft, sous le nom du fichier ouvert quel que soit l'onglet) : l'onglet devant **récrit son propre fichier** s'il en a un, sinon le dialogue de l'OS propose le nom de l'onglet. Jamais le fichier d'un autre onglet.
+- `saveAs: true`, ou Ctrl+Maj+S : toujours le dialogue. Après l'écriture, l'onglet prend le nom du fichier (`file.rename`, puis `file.markSaved`).
+- Un fichier ouvert dans un autre format (`.fig`, `.sketch`, `.penpot`, image) n'est que la **source** de l'onglet : FigCraft enregistre en `.figcraft`, donc le premier enregistrement demande où, dans le dossier de la source.
+- Une écriture ratée ou annulée laisse l'onglet « non enregistré » (titre avec `*`) et le prochain enregistrement redemande.
+- Fermeture : chaque onglet modifié est mis devant (`doc.switch`) puis enregistré par Fichier › Enregistrer de FigCraft (`ui.menu.invoke`) ; la fenêtre ne se ferme que si tout est écrit.
+
+Constats :
+
+- **`ui.menu.invoke`** lance les éléments de menu de FigCraft comme un clic (Enregistrer, Enregistrer sous, Ouvrir, PDF des cadres) ; `engine.execute` accepte un `document` (l'`id` de `doc.list`) pour viser un onglet sans le montrer (`file.close`, `file.rename`).
+- **Stockage** : FigCraft ne garde dans `localStorage` que le nom de l'utilisateur et, quand la page s'arrête sur une erreur, les copies de récupération. Le module les place dans `~/.config/ca.kazo.fig/web-storage.json` : la fenêtre suivante de ce même utilisateur rouvre les designs perdus.
+- **Limite connue** : Fichier › Enregistrer sous **cliqué dans le menu** sur l'onglet dont le nom est celui du fichier ouvert arrive comme un Enregistrer (`saveAs: false`) et récrit ce fichier. Ctrl+Maj+S demande bien un nouveau fichier. Le ticket amont (préparé pour Benoit) couvre les deux cas.
+
+Tests : 96 tests xUnit (dont formats, onglets, touches, manifeste) et 5 nouveaux parcours Playwright dans l'OS : un design neuf enregistré, récrit sur place et rouvert par `xdg-open` ; un deuxième onglet n'écrase jamais le fichier ouvert et chaque fichier garde son design ; Ctrl+Maj+S et une copie PDF ; la garde de fermeture (Annuler, Oui puis Annuler, Oui) ; Fichier › Ouvrir de FigCraft par le dialogue de l'OS, dans la fenêtre restée vide.
+
 ## Piste amont
 
 Textes préparés par Claude en anglais, publiés par Benoit (aucune mention d'agent, règles des
@@ -142,6 +169,6 @@ dépôts `storytold`) :
 - [x] Plan fr et en.
 - [x] Réponses de Benoit à Q1 et Q2 (A et A).
 - [x] Chantier 1 (`fig/1-solution`) : solution, manifeste, zip 0.18.1, fenêtre de démarrage sur le module, CI sur `main`.
-- [ ] Chantier 2.
+- [x] Chantier 2 (`fig/2-window`) : formats, onglets liés à leur fichier, enregistrer, Enregistrer sous, copies, fermeture, sélecteur, stockage par utilisateur.
 - [ ] Chantier 3.
 - [ ] Chantier 4.

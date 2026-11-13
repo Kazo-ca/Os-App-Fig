@@ -67,7 +67,7 @@ export const documents = frame => execute(frame, 'doc.list');
 /** FigCraft's UI state (`ui.inspect`). */
 export const inspectUi = frame => request(frame, 'ui.inspect');
 
-/** Waits until the frame's active design has `count` nodes on its page (`document.inspect`). */
+/** Waits until the frame's active design has a node named `name` (`document.inspect`). */
 export const waitForNodeNamed = (frame, name) => frame.waitForFunction(async wanted => {
     try {
         return JSON.stringify(await window.figcraft.request('document.inspect', {})).includes(wanted);
@@ -75,6 +75,12 @@ export const waitForNodeNamed = (frame, name) => frame.waitForFunction(async wan
         return false;
     }
 }, name, { timeout: STEP_TIMEOUT_MS });
+
+/** Whether the frame's active design has a node named `name`. */
+export const hasNodeNamed = async (frame, name) => JSON.stringify(await request(frame, 'document.inspect')).includes(name);
+
+/** Runs a FigCraft menu item as a click on it would (`ui.menu.invoke`): File › Save, Save as, Open… */
+export const menu = (frame, id) => request(frame, 'ui.menu.invoke', { id });
 
 /** Answers the OS save dialog with a file name (in the folder it opens in). */
 export async function answerSaveDialog(page, title, fileName) {

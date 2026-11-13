@@ -60,7 +60,7 @@ hold that commit) and on the official zip `figcraft-web-0.18.1.zip`.
 | 3 | Integration | One iframe per window, page `wwwroot/host/index.html` with the canvas `figcraft_canvas` `data-host="page"` `data-craft-app="figcraft"`, and `control` in the address parameters. |
 | 4 | Changing screens | `canChangeScreen: false` in the manifest's `window` block from work item 1 (issue #2). |
 | 5 | Build provenance | As Kazo Spreadsheets: first the **official 0.18.1 zip** pinned by SHA-256, in the repository under `wwwroot/figcraft/` with `figcraft.json`; then built from the fork (work item 3, branch `kazo/v0.18.1` = `4acc293`, with `craft-fonts`). |
-| 6 | Save As | Nothing to work around: FigCraft says `saveAs` itself, and its Ctrl+Shift+S goes through its own Save As. No reserved key beyond the OS ones and Ctrl+N. |
+| 6 | Save as | Revised in work item 2: FigCraft says `saveAs` itself, except for the Save as of the tab whose name is the opened file's (`Poster` → `Poster.figcraft`), handed over with `saveAs: false` like a Save. The window therefore reserves **Ctrl+Shift+S** (FigCraft's chord) and runs File › Save as itself, which always asks for a new file. The same item clicked in the menu stays a Save in that one case (known limit, in the upstream issue). |
 | 7 | Several tabs | **Q1 = A** (Benoit, 2026-11-13): the window binds each file to the tab (`doc.list`'s `id`); a `save` from another tab is a Save As (OS dialog); upstream issue and PR prepared by Claude, published by Benoit. |
 | 8 | Associated formats | **Q2 = A** (Benoit, 2026-11-13): default app for `.figcraft .fig .sketch .penpot .jam`; "Open with" for `.svg`, `.json` and pictures. |
 
@@ -127,6 +127,33 @@ Findings:
 
 Tests: 34 xUnit tests (manifest, build provenance, iframe page, fr and en texts, parameters, language, theme) and 3 Playwright journeys in the OS: WebGPU, dark theme, blank design, keyboard (R picks the rectangle); WebGL 2 with `--webgl`; two windows each with its own design, and a window brought to the front with no iframe reloaded (ADR 0244). Screenshot: `kazo-fig-work-item-1-webgl.png` in the project files (`fig/trials/`).
 
+## Work item 2: complete window (2026-11-13)
+
+| File | Role |
+| --- | --- |
+| `Documents/FigFormats.cs` | formats (decision 8, Q2 = A): default app for `.figcraft .fig .sketch .penpot .jam`, "Open with" for `.json .svg` and images, `.pdf` as a copy only; FigCraft's rule to tell the design from a copy (`.figcraft` or `.json`, except `.variables.json`); the File › Open picker (the only one that accepts `.json`) |
+| `Documents/FigTab.cs`, `Documents/FigTabs.cs` | the tabs read from `doc.list` (`id` = FigCraft's `uid`, stable) and their file, bound by `id` (decision 7, Q1 = A); the decision for each `save` by the tab in front; title; tabs to save before closing |
+| `FigWindow.Documents.cs` | open (`figcraft:open`, then the new tab in `doc.list` gets the file; the untouched blank design of the start is closed), save, Save as, copies, close guard |
+| `FigWindow.Proxy.cs`, `Hosting/FigKeys.cs` | FigCraft's file picker replaced by the OS dialog, Ctrl+N (new window), Ctrl+Shift+S (Save as, decision 6 revised), per-user storage, theme and language |
+| `FigApp.cs` | capabilities (dialogs, home folder, private folder, `apps.launch`) and file associations |
+
+How the window decides a `save` (FigCraft keeps one host file per page):
+
+- The window asks for the tab in front (`doc.list`). A name other than `.figcraft` or `.json` is a **copy**: "Save a copy" dialog, the tab keeps its file.
+- `saveAs: false` (FigCraft's File › Save, under the opened file's name whichever tab): the tab in front **rewrites its own file** when it has one, otherwise the OS dialog suggests the tab's name. Never another tab's file.
+- `saveAs: true`, or Ctrl+Shift+S: always the dialog. After the write the tab takes the file's name (`file.rename`, then `file.markSaved`).
+- A file opened in another format (`.fig`, `.sketch`, `.penpot`, an image) is only the tab's **source**: FigCraft saves `.figcraft`, so the first save asks where, in the source's folder.
+- A failed or cancelled write leaves the tab "unsaved" (title with `*`) and the next save asks again.
+- Close: each modified tab is brought to the front (`doc.switch`) and saved by FigCraft's File › Save (`ui.menu.invoke`); the window closes only when everything is written.
+
+Findings:
+
+- **`ui.menu.invoke`** runs FigCraft's menu items as a click does (Save, Save as, Open, frames PDF); `engine.execute` takes a `document` (the `id` from `doc.list`) to act on a tab without showing it (`file.close`, `file.rename`).
+- **Storage**: FigCraft keeps in `localStorage` only the user's name and, when the page stops on an error, the recovery copies. The module puts them in `~/.config/ca.kazo.fig/web-storage.json`: the same user's next window opens the lost designs again.
+- **Known limit**: File › Save as **clicked in the menu** on the tab whose name is the opened file's arrives as a Save (`saveAs: false`) and rewrites that file. Ctrl+Shift+S does ask for a new file. The upstream issue (prepared for Benoit) covers both cases.
+
+Tests: 96 xUnit tests (including formats, tabs, keys, manifest) and 5 new Playwright journeys in the OS: a new design saved, rewritten in place and reopened by `xdg-open`; a second tab never overwrites the opened file and each file keeps its design; Ctrl+Shift+S and a PDF copy; the close guard (Cancel, Yes then Cancel, Yes); FigCraft's File › Open through the OS dialog, in the window left blank.
+
 ## Upstream track
 
 Texts prepared by Claude in English, published by Benoit (no agent mention, `storytold` repository
@@ -141,6 +168,6 @@ rules):
 - [x] Plan fr and en.
 - [x] Benoit's answers to Q1 and Q2 (A and A).
 - [x] Work item 1 (`fig/1-solution`): solution, manifest, 0.18.1 zip, start-up window on the module, CI on `main`.
-- [ ] Work item 2.
+- [x] Work item 2 (`fig/2-window`): formats, tabs bound to their file, save, Save as, copies, close, picker, per-user storage.
 - [ ] Work item 3.
 - [ ] Work item 4.
