@@ -105,6 +105,28 @@ module does most of them. Benoit merges `fig/base` into `main`.
 **Done when**: Kazo Fig installs from the Store of a published Kazo OS, opens a `.figcraft` by
 double-click, saves it, and two windows run together.
 
+## Work item 1: solution and start-up window (2026-11-13)
+
+| File | Role |
+| --- | --- |
+| `Kazo.Fig.slnx`, `src/Kazo.Fig`, `src/Kazo.Fig.Os`, `tests/Kazo.Fig.Tests` | template solution renamed |
+| `FigApp.cs` | manifest: `ca.kazo.fig`, category `graphics`, several windows, 1200 × 800 (minimum 800 × 520), `canChangeScreen: false` (decision 4), no capability nor format (work item 2) |
+| `tools/vendor-figcraft.sh`, `wwwroot/figcraft/figcraft.json` | official 0.18.1 zip pinned by SHA-256 (decision 5): glue, `.wasm`, `snippets/`, licences and the 29 OFL licences of the embedded fonts; neither upstream's page, `README` nor `_headers` |
+| `wwwroot/host/index.html` | iframe page: canvas `figcraft_canvas` `data-craft-app="figcraft"`, the module's `craft-proxy.js` and `craft-page.css` |
+| `FigWindow.*`, `Hosting/` | start-up on the module (loading, error, "Retry", 60 s timeout), address parameters (`control`, `author`, `webgl`), OS theme (`ui.set { theme }`), language (`pref.language` with the culture name), a blank design at start (`file.new`, then `ui.set { home: false }`) |
+| `tests/e2e/` | Playwright journeys in the OS (`npm run test:e2e` after `dotnet build -c Debug`) |
+| `.github/` | CI as Kazo Spreadsheets: OS submodule on `main` (`KAZOOS_BRANCH: main`) and Release profile built from the sources (`KAZOOS_USE_SOURCE`) until `v3.3.3` is tagged |
+
+Findings:
+
+- **`?control` is required**: without it FigCraft does not install `window.figcraft` and the module's proxy cannot ask it anything. The window always adds it.
+- **Language**: FigCraft resolves a BCP 47 tag itself (`fr-CA`, `pt-PT` → `pt-BR`, `es-MX` → `es-419`, Chinese by script and region). The window passes the culture name as it is, with no list to maintain.
+- **Theme**: `light` or `dark` from the OS, never `system` (which would follow the browser).
+- **Package**: 10.7 MB `.kazoapp`; 25.5 MB `.wasm`.
+- **Kazo OS 3.3.3** is not tagged yet: the install in a published Kazo OS (`kazopkg install`) happens in work item 4, with the submodule on `v3.3.3`.
+
+Tests: 34 xUnit tests (manifest, build provenance, iframe page, fr and en texts, parameters, language, theme) and 3 Playwright journeys in the OS: WebGPU, dark theme, blank design, keyboard (R picks the rectangle); WebGL 2 with `--webgl`; two windows each with its own design, and a window brought to the front with no iframe reloaded (ADR 0244). Screenshot: `kazo-fig-work-item-1-webgl.png` in the project files (`fig/trials/`).
+
 ## Upstream track
 
 Texts prepared by Claude in English, published by Benoit (no agent mention, `storytold` repository
@@ -118,7 +140,7 @@ rules):
 - [x] Step 0: reading FigCraft 0.18.1 and the official zip.
 - [x] Plan fr and en.
 - [x] Benoit's answers to Q1 and Q2 (A and A).
-- [ ] Work item 1.
+- [x] Work item 1 (`fig/1-solution`): solution, manifest, 0.18.1 zip, start-up window on the module, CI on `main`.
 - [ ] Work item 2.
 - [ ] Work item 3.
 - [ ] Work item 4.

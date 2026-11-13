@@ -1,7 +1,7 @@
 {
-  "repository": "https://github.com/example/Os-App-MyApp",
-  "project": "src/Kazo.Os.App/Kazo.Os.App.csproj",
-  "category": "productivity",
-  "tags": ["sample"],
+  "repository": "https://github.com/Kazo-ca/Os-App-Fig",
+  "project": "src/Kazo.Fig/Kazo.Fig.csproj",
+  "category": "graphics",
+  "tags": ["design", "prototype", "ui", "figcraft"],
   "license": "MIT"
 }

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--
+  The page of the Kazo Fig iframe (doc/en/plan.md, decision 3). FigCraft runs here, in
+  page host mode (data-host="page"). craft-proxy.js, served by Kazo OS with the Kazo.Os.AppSdk.Craft
+  module (ADR 0259), reads data-craft-app and data-craft-build, starts FigCraft from
+  ../figcraft/figcraft.json and relays its canvas events to the window through the MessagePort
+  the window hands over. FigCraft writes a start error into figcraft_loading. The window adds
+  "control" to the page's query: FigCraft installs window.figcraft, which the proxy uses, only
+  then. No inline script or style.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>Kazo Fig</title>
+  <link rel="stylesheet" href="../../Kazo.Os.AppSdk.Craft/craft-page.css">
+  <script type="module" src="../../Kazo.Os.AppSdk.Craft/craft-proxy.js"></script>
+</head>
+<body>
+  <canvas id="figcraft_canvas" data-host="page"
+          data-craft-app="figcraft" data-craft-build="../figcraft/figcraft.json"></canvas>
+  <div id="figcraft_loading" data-craft-loading aria-hidden="true"></div>
+</body>
+</html>

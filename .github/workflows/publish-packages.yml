@@ -24,7 +24,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  APP_DIRECTORY: src/Kazo.Os.App
+  APP_DIRECTORY: src/Kazo.Fig
   PACKAGES_BRANCH: kazoos-packages
 
 jobs:
@@ -32,8 +32,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
+
+      # Only the Kazo OS submodule: external/figcraft (work item 3) is only needed to compile FigCraft.
+      - name: Fetch the Kazo OS submodule
+        run: git submodule update --init --depth 1 external/KazoOs
 
       - uses: actions/setup-dotnet@v4
         with:
