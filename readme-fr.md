@@ -10,6 +10,8 @@ L'outil de design d'interfaces de Kazo OS, construit sur [FigCraft](https://gith
 | `src/Kazo.Fig.Os` | Un hôte qui lance tout Kazo OS avec les apps de base et cette app : le projet à démarrer |
 | `tests/Kazo.Fig.Tests` | Les tests de l'app |
 | `external/KazoOs` | Le dépôt Kazo OS en sous-module git, sur un tag de release |
+| `external/figcraft` | Les sources de FigCraft (notre fork `Kazo-ca/figcraft`) en sous-module git, seulement pour compiler FigCraft |
+| `src/Kazo.Fig/wwwroot/figcraft` | Le build web de FigCraft et sa provenance `figcraft.json`, jamais modifiés à la main |
 | `store/` | Ce que montre le Kazo OS Store : icône (PNG 256×256), descriptions courtes, descriptions, `store.json` |
 
 ## Premiers pas
@@ -49,6 +51,25 @@ un sous-module modifié ou hors de son tag.
 | `Release` | les paquets `Kazo.Os.*` de nuget.org, à la version du sous-module | CI, `dotnet publish`, le Kazo OS Store |
 
 Forcez l'un ou l'autre avec `-p:KazoOsUseSource=true` ou `false`.
+
+## Compiler FigCraft depuis les sources
+
+L'app utilise le build de FigCraft enregistré dans `src/Kazo.Fig/wwwroot/figcraft/` ; compiler
+l'app ne compile pas FigCraft. Pour changer de version de FigCraft, ou prendre un correctif de notre
+fork, déplacer le sous-module `external/figcraft` sur un commit du fork `Kazo-ca/figcraft` (branche
+`kazo/v<version>`), fusionner, puis lancer le workflow **Build FigCraft** sur la branche depuis
+l'onglet Actions : il compile, enregistre le build sur `figcraft/build-<version>-<commit>`, y lance
+la CI et ouvre une PR. Sur une machine, avec une copie de `storytold/craft-fonts` à la révision que
+nomme le script (le build web de FigCraft embarque ses polices) :
+
+```bash
+git submodule update --init --depth 1 external/figcraft
+rustup target add wasm32-unknown-unknown   # Rust 1.95 ou plus ; Trunk 0.21.14
+tools/build-figcraft.sh --craft-fonts ../craft-fonts
+```
+
+`tools/vendor-figcraft.sh` seul reprend le zip officiel épinglé par SHA-256. Les tests vérifient
+que la provenance nomme ce zip ou le commit du sous-module.
 
 ## Publier dans le Kazo OS Store
 

@@ -10,6 +10,8 @@ The interface design tool of Kazo OS, built on [FigCraft](https://github.com/sto
 | `src/Kazo.Fig.Os` | A host that runs the whole Kazo OS with the base apps and this app: the project to start |
 | `tests/Kazo.Fig.Tests` | Tests of the app |
 | `external/KazoOs` | The Kazo OS repository as a git submodule, on a release tag |
+| `external/figcraft` | FigCraft's sources (our fork `Kazo-ca/figcraft`) as a git submodule, only to compile FigCraft |
+| `src/Kazo.Fig/wwwroot/figcraft` | The FigCraft web build and its provenance `figcraft.json`, never edited by hand |
 | `store/` | What the Kazo OS Store shows: icon (PNG 256×256), short descriptions, descriptions, `store.json` |
 
 ## First steps
@@ -49,6 +51,25 @@ submodule with local changes or off its tag.
 | `Release` | the `Kazo.Os.*` packages of nuget.org, at the submodule's version | CI, `dotnet publish`, the Kazo OS Store |
 
 Force either one with `-p:KazoOsUseSource=true` or `false`.
+
+## Building FigCraft from source
+
+The app uses the FigCraft build committed in `src/Kazo.Fig/wwwroot/figcraft/`; building the app
+does not compile FigCraft. To change FigCraft's version, or to take a fix of our fork, move the
+`external/figcraft` submodule to a commit of the fork `Kazo-ca/figcraft` (branch
+`kazo/v<version>`), merge that, then run the **Build FigCraft** workflow on the branch from the
+Actions tab: it compiles, commits the build on `figcraft/build-<version>-<commit>`, runs CI there
+and opens a PR. On a machine, with a checkout of `storytold/craft-fonts` at the revision the
+script names (FigCraft's web build embeds its fonts):
+
+```bash
+git submodule update --init --depth 1 external/figcraft
+rustup target add wasm32-unknown-unknown   # Rust 1.95 or later; Trunk 0.21.14
+tools/build-figcraft.sh --craft-fonts ../craft-fonts
+```
+
+`tools/vendor-figcraft.sh` alone takes back the official zip pinned by SHA-256. The tests
+check that the provenance names either that zip or the submodule's commit.
 
 ## Publishing to the Kazo OS Store
 

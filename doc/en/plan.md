@@ -154,6 +154,23 @@ Findings:
 
 Tests: 96 xUnit tests (including formats, tabs, keys, manifest) and 5 new Playwright journeys in the OS: a new design saved, rewritten in place and reopened by `xdg-open`; a second tab never overwrites the opened file and each file keeps its design; Ctrl+Shift+S and a PDF copy; the close guard (Cancel, Yes then Cancel, Yes); FigCraft's File › Open through the OS dialog, in the window left blank.
 
+## Work item 3: building FigCraft from the fork (2026-11-13)
+
+| File | Role |
+| --- | --- |
+| `external/figcraft` (submodule) | fork `Kazo-ca/figcraft`, branch `kazo/v0.18.1` created on the `v0.18.1` tag commit (`4acc293`, upstream `release` branch; the fork's `main` does not have it) |
+| `tools/build-figcraft.sh` | builds FigCraft's web page like the official release (`packaging/web/package.sh`, trunk 0.21.14, `wasm32-unknown-unknown` target), with `craft-fonts` required at the release's revision (`37827ad`, checked), then places it in `wwwroot/figcraft/` through `vendor-figcraft.sh` (`kind: source-build`, commit, `craftFonts`, `rustc`, `trunk`) |
+| `.github/workflows/build-figcraft.yml` | run by hand: builds, validates through `ci.yml`, and opens a PR `figcraft/build-<version>-<commit>`; on a PR that touches the build, only builds |
+| `FigCraftBuildTests.cs` | a source build must name the release's `craft-fonts` revision |
+
+Findings:
+
+- **Fonts**: FigCraft embeds its fonts. Without `craft-fonts` (`CRAFT_FONTS_REQUIRED=1`), the build fails instead of producing a page without fonts.
+- **Rust**: built with stable Rust 1.100.0 (like CI). The `.wasm` is 25,482,145 bytes, 0.08% smaller than the official zip's; the glue is 4 bytes smaller. FigCraft does not use `craft-i18n`.
+- `wwwroot/figcraft/` now holds this build (35 files, including the 29 OFL licences).
+
+Tests: 96 xUnit tests and the 8 Playwright journeys in the OS, green with the source build.
+
 ## Upstream track
 
 Texts prepared by Claude in English, published by Benoit (no agent mention, `storytold` repository
@@ -169,5 +186,5 @@ rules):
 - [x] Benoit's answers to Q1 and Q2 (A and A).
 - [x] Work item 1 (`fig/1-solution`): solution, manifest, 0.18.1 zip, start-up window on the module, CI on `main`.
 - [x] Work item 2 (`fig/2-window`): formats, tabs bound to their file, save, Save as, copies, close, picker, per-user storage.
-- [ ] Work item 3.
+- [x] Work item 3 (`fig/3-build-from-source`): fork as submodule, build with `craft-fonts`, workflow, page built from source.
 - [ ] Work item 4.
