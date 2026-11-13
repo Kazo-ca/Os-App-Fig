@@ -1,1 +1,1 @@
-A Kazo OS window app made with the kazoos-solution template.
+Interface design and prototyping for .figcraft files, based on FigCraft by the ArtCraft team.

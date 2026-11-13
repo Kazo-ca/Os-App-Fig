@@ -1,0 +1,33 @@
+@inherits WindowAppBase
+
+<div class="fig-window" role="application" aria-label="@L["EditorLabel"]">
+    @* craft-host.js (Kazo.Os.AppSdk.Craft) puts FigCraft's iframe in this element; it stays hidden until FigCraft is ready. *@
+    <div class="fig-frame @(_startup.State == FrameState.Running ? "running" : string.Empty)" @ref="_frameHost"></div>
+
+    @if (_startup.State == FrameState.Loading)
+    {
+        <div class="fig-screen" role="status">
+            <div class="fig-spinner" aria-hidden="true"></div>
+            <p class="fig-screen-title">@L["Loading"]</p>
+            <p class="fig-screen-hint">@L["LoadingHint"]</p>
+        </div>
+    }
+    else if (_startup.State == FrameState.Failed)
+    {
+        <div class="fig-screen failed" role="alert">
+            <p class="fig-screen-title">@L["FailedTitle"]</p>
+            <p class="fig-screen-detail">@FailureText</p>
+            <p class="fig-screen-hint">@L["FailedHint"]</p>
+            <button type="button" class="fig-retry" @onclick="RetryAsync">@L["Retry"]</button>
+        </div>
+    }
+
+    @if (_notice is not null)
+    {
+        @* Over FigCraft, at the bottom right: a failed write, a cancelled save, a copy written. *@
+        <div class="fig-notice @(_noticeIsError ? "error" : string.Empty)" role="@(_noticeIsError ? "alert" : "status")">
+            <span class="fig-notice-text">@_notice</span>
+            <button type="button" class="fig-notice-close" aria-label="@L["Dismiss"]" @onclick="DismissNotice">×</button>
+        </div>
+    }
+</div>
