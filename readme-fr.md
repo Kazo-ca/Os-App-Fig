@@ -1,14 +1,14 @@
 > [English version](README.md)
 
-# Kazo.Os.App
+# Kazo Fig
 
-Un dépôt d'app Kazo OS, créé avec le modèle `kazoos-solution`.
+L'outil de design d'interfaces de Kazo OS, construit sur [FigCraft](https://github.com/storytold/figcraft) (équipe ArtCraft). En cours : voir le [plan](doc/fr/plan.md). Ce dépôt a été créé avec le modèle `kazoos-solution` ; la fiche du Store remplace cette page au chantier Store.
 
 | Dossier | Contenu |
 | --- | --- |
-| `src/Kazo.Os.App` | L'app (app fenêtrée ; sa classe `[AppManifest]` génère `manifest.json`) |
-| `src/Kazo.Os.App.Os` | Un hôte qui lance tout Kazo OS avec les apps de base et cette app : le projet à démarrer |
-| `tests/Kazo.Os.App.Tests` | Les tests de l'app |
+| `src/Kazo.Fig` | L'app (app fenêtrée ; sa classe `[AppManifest]` génère `manifest.json`) |
+| `src/Kazo.Fig.Os` | Un hôte qui lance tout Kazo OS avec les apps de base et cette app : le projet à démarrer |
+| `tests/Kazo.Fig.Tests` | Les tests de l'app |
 | `external/KazoOs` | Le dépôt Kazo OS en sous-module git, sur un tag de release |
 | `store/` | Ce que montre le Kazo OS Store : icône (PNG 256×256), descriptions courtes, descriptions, `store.json` |
 
@@ -24,8 +24,8 @@ git submodule add --depth 1 https://github.com/Kazo-ca/Os.git external/KazoOs
 git -C external/KazoOs checkout v<version de Kazo OS>
 ```
 
-Ouvrez ensuite le `.sln` dans Visual Studio ou Rider et démarrez `Kazo.Os.App.Os`,
-ou lancez `dotnet run --project src/Kazo.Os.App.Os`.
+Ouvrez ensuite `Kazo.Fig.slnx` dans Visual Studio ou Rider et démarrez `Kazo.Fig.Os`,
+ou lancez `dotnet run --project src/Kazo.Fig.Os`.
 
 ## La version de Kazo OS
 
