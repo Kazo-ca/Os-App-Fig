@@ -155,6 +155,23 @@ Constats :
 
 Tests : 96 tests xUnit (dont formats, onglets, touches, manifeste) et 5 nouveaux parcours Playwright dans l'OS : un design neuf enregistré, récrit sur place et rouvert par `xdg-open` ; un deuxième onglet n'écrase jamais le fichier ouvert et chaque fichier garde son design ; Ctrl+Maj+S et une copie PDF ; la garde de fermeture (Annuler, Oui puis Annuler, Oui) ; Fichier › Ouvrir de FigCraft par le dialogue de l'OS, dans la fenêtre restée vide.
 
+## Chantier 3 : compiler FigCraft depuis le fork (2026-11-13)
+
+| Fichier | Rôle |
+| --- | --- |
+| `external/figcraft` (sous-module) | fork `Kazo-ca/figcraft`, branche `kazo/v0.18.1` créée sur le commit du tag `v0.18.1` (`4acc293`, branche `release` de l'amont ; le `main` du fork ne l'a pas) |
+| `tools/build-figcraft.sh` | compile la page web de FigCraft comme la release officielle (`packaging/web/package.sh`, trunk 0.21.14, cible `wasm32-unknown-unknown`), avec `craft-fonts` obligatoire à la révision de la release (`37827ad`, vérifiée), puis la place dans `wwwroot/figcraft/` par `vendor-figcraft.sh` (`kind: source-build`, commit, `craftFonts`, `rustc`, `trunk`) |
+| `.github/workflows/build-figcraft.yml` | lancé à la main : compile, valide par `ci.yml`, et ouvre une PR `figcraft/build-<version>-<commit>` ; sur une PR qui touche la compilation, compile seulement |
+| `FigCraftBuildTests.cs` | une compilation depuis les sources doit citer la révision de `craft-fonts` de la release |
+
+Constats :
+
+- **Polices** : FigCraft embarque ses polices. Sans `craft-fonts` (`CRAFT_FONTS_REQUIRED=1`), la compilation échoue au lieu de produire une page sans polices.
+- **Rust** : compilé avec Rust 1.100.0 stable (comme la CI). Le `.wasm` fait 25 482 145 octets, 0,08 % de moins que celui du zip officiel ; la glue fait 4 octets de moins. FigCraft n'utilise pas `craft-i18n`.
+- `wwwroot/figcraft/` contient maintenant cette compilation (35 fichiers, dont les 29 licences OFL).
+
+Tests : 96 tests xUnit et les 8 parcours Playwright dans l'OS, verts avec la compilation depuis les sources.
+
 ## Piste amont
 
 Textes préparés par Claude en anglais, publiés par Benoit (aucune mention d'agent, règles des
@@ -170,5 +187,5 @@ dépôts `storytold`) :
 - [x] Réponses de Benoit à Q1 et Q2 (A et A).
 - [x] Chantier 1 (`fig/1-solution`) : solution, manifeste, zip 0.18.1, fenêtre de démarrage sur le module, CI sur `main`.
 - [x] Chantier 2 (`fig/2-window`) : formats, onglets liés à leur fichier, enregistrer, Enregistrer sous, copies, fermeture, sélecteur, stockage par utilisateur.
-- [ ] Chantier 3.
+- [x] Chantier 3 (`fig/3-build-from-source`) : fork en sous-module, compilation avec `craft-fonts`, workflow, page compilée depuis les sources.
 - [ ] Chantier 4.

@@ -6,7 +6,7 @@
 # projects from it (KazoOsUseSource=true): the module is not on nuget.org yet. Work item 4 puts
 # the submodule on the release tag and removes KAZOOS_BRANCH and KAZOOS_USE_SOURCE.
 #
-# workflow_call: the Build FigCraft workflow (work item 3) will call it on the branch it pushes,
+# workflow_call: the Build FigCraft workflow (work item 3) calls it on the branch it pushes,
 # since a push made with the workflow token starts no workflow.
 name: CI
 

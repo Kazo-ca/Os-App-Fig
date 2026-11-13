@@ -33,6 +33,10 @@ public sealed partial class FigCraftBuildTests
         Assert.Equal("source-build", kind);
         Assert.Equal(SubmoduleCommit(), source.GetProperty("commit").GetString());
         Assert.Equal("https://github.com/Kazo-ca/figcraft.git", source.GetProperty("repository").GetString());
+
+        // FigCraft's web release draws its text with the craft-fonts faces it embeds: the build must
+        // use the revision of the release (tools/build-figcraft.sh pins it).
+        Assert.Equal("37827adc41fd165f9a9234ac40f94dbad353aa69", source.GetProperty("craftFonts").GetString());
     }
 
     [Fact]

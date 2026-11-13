@@ -1,12 +1,15 @@
 {
   "version": "0.18.1",
   "source": {
-    "kind": "release-zip",
-    "url": "https://github.com/storytold/figcraft/releases/download/v0.18.1/figcraft-web-0.18.1.zip",
-    "sha256": "2fbeb93f5022b0a7cc9d8528f1ed7e2b54c94d213ef79e65128aa898c399f02b"
+    "kind": "source-build",
+    "repository": "https://github.com/Kazo-ca/figcraft.git",
+    "commit": "4acc293c2ec941ac1400837ee7e3ab51780399f8",
+    "craftFonts": "37827adc41fd165f9a9234ac40f94dbad353aa69",
+    "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)",
+    "trunk": "0.21.14"
   },
-  "glue": "figcraft-web-f987f34d74d47a59.js",
-  "wasm": "figcraft-web-f987f34d74d47a59_bg.wasm",
+  "glue": "figcraft-web-6fceffc05accf13b.js",
+  "wasm": "figcraft-web-6fceffc05accf13b_bg.wasm",
   "files": [
     { "path": "LICENSE-APACHE", "size": 10174, "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594" },
     { "path": "LICENSE-MIT", "size": 1100, "sha256": "360c12b61568ef50808e731c98ae84110ea6f674dc34ac1ecb05d7abb9a6079a" },
@@ -40,8 +43,8 @@
     { "path": "OFL-shippori-mincho.txt", "size": 4399, "sha256": "41fba056279be5f45ff9a99e44b7b53897b42732f5806d8e666e0ab49ac6bd38" },
     { "path": "OFL-source-sans-3.txt", "size": 4579, "sha256": "89ad2c4f66dd29127527493e729c31e731f111cf10faf5774c3db9275ed0c22c" },
     { "path": "OFL-source-serif-4.txt", "size": 4492, "sha256": "75784a295293a8992f5a8d99210566e0064a012e6dab6731305e3787f15896c7" },
-    { "path": "figcraft-web-f987f34d74d47a59.js", "size": 187658, "sha256": "27549a4dc65973123bc09a805d715380e841984dabc85822e259981ed85eb30e" },
-    { "path": "figcraft-web-f987f34d74d47a59_bg.wasm", "size": 25503950, "sha256": "bdd9aa860a403443b75d23957dce8ff2d3aecdb63e2916e62461d27a0efdfaab" },
+    { "path": "figcraft-web-6fceffc05accf13b.js", "size": 187654, "sha256": "363e0b0a339777ff2b8d1cd75eb9cf0d0f646a727285c2dc11a5d138f66f3e2c" },
+    { "path": "figcraft-web-6fceffc05accf13b_bg.wasm", "size": 25482145, "sha256": "a3dcc0386092a48c64946c79da7b64e8d70ba1c4d04f0d899029cb28b6648f01" },
     { "path": "snippets/eframe-d31a8450ea12dfc1/inline0.js", "size": 280, "sha256": "22a98f9d0c5a0532d291bdc9a3050439420b3d11143b4568fcfd3c66fff36995" }
   ]
 }
