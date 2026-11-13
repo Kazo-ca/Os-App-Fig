@@ -52,9 +52,53 @@ public sealed class ManifestTests
     }
 
     [Fact]
-    public void Work_item_1_asks_for_no_capability_and_handles_no_file()
+    public void The_window_asks_for_the_dialogs_the_files_and_apps_launch()
     {
-        Assert.Empty(_app.Capabilities);
-        Assert.Empty(_app.FileHandlers);
+        Assert.Equal(
+            [
+                AppCapabilities.DialogFileOpen,
+                AppCapabilities.DialogFileSave,
+                AppCapabilities.FileSystemUserHomeRead,
+                AppCapabilities.FileSystemUserHomeWrite,
+                AppCapabilities.FileSystemPrivateRead,
+                AppCapabilities.FileSystemPrivateWrite,
+                AppCapabilities.AppsLaunch,
+            ],
+            _app.Capabilities);
+    }
+
+    [Theory]
+    [InlineData(".figcraft")]
+    [InlineData(".fig")]
+    [InlineData(".sketch")]
+    [InlineData(".penpot")]
+    [InlineData(".jam")]
+    public void Kazo_Fig_is_the_default_app_of_design_files(string extension)
+    {
+        FileHandler handler = Assert.Single(_app.FileHandlers, candidate => candidate.Extensions.Contains(extension));
+        Assert.Contains("open", handler.Actions);
+        Assert.Contains("edit", handler.Actions);
+    }
+
+    [Theory]
+    [InlineData(".json")]
+    [InlineData(".svg")]
+    [InlineData(".png")]
+    [InlineData(".jpg")]
+    [InlineData(".jpeg")]
+    [InlineData(".webp")]
+    [InlineData(".gif")]
+    [InlineData(".tif")]
+    [InlineData(".tiff")]
+    public void SVG_JSON_and_images_are_only_offered_in_open_with(string extension)
+    {
+        FileHandler handler = Assert.Single(_app.FileHandlers, candidate => candidate.Extensions.Contains(extension));
+        Assert.Equal(["open"], handler.Actions);
+    }
+
+    [Fact]
+    public void Exported_PDF_copies_are_not_associated()
+    {
+        Assert.DoesNotContain(_app.FileHandlers, candidate => candidate.Extensions.Contains(".pdf"));
     }
 }

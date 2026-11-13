@@ -21,4 +21,13 @@
             <button type="button" class="fig-retry" @onclick="RetryAsync">@L["Retry"]</button>
         </div>
     }
+
+    @if (_notice is not null)
+    {
+        @* Over FigCraft, at the bottom right: a failed write, a cancelled save, a copy written. *@
+        <div class="fig-notice @(_noticeIsError ? "error" : string.Empty)" role="@(_noticeIsError ? "alert" : "status")">
+            <span class="fig-notice-text">@_notice</span>
+            <button type="button" class="fig-notice-close" aria-label="@L["Dismiss"]" @onclick="DismissNotice">×</button>
+        </div>
+    }
 </div>
