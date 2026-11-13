@@ -12,3 +12,4 @@ artifacts/
 
 # npm (the end-to-end runs)
 node_modules/
+installed-failure.png

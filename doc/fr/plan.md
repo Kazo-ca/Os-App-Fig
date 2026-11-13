@@ -172,6 +172,28 @@ Constats :
 
 Tests : 96 tests xUnit et les 8 parcours Playwright dans l'OS, verts avec la compilation depuis les sources.
 
+## Chantier 4 : le Store (2026-11-13)
+
+Kazo OS 3.3.3 (module `Kazo.Os.AppSdk.Craft`) est publiée sur nuget.org et taguée `v3.3.3` : le
+sous-module y était déjà (`b5bb8af`).
+
+- **CI sur le profil Release des paquets nuget.org** : `KAZOOS_BRANCH` et `KAZOOS_USE_SOURCE`
+  retirés, le script de vérification ne connaît plus que l'étiquette (comme Kazo Spreadsheets).
+- **Fiche du Store** fr et en (`store/`), qui crédite FigCraft de l'équipe ArtCraft et donne les
+  limites connues ; icône `store/icon.png` rendue depuis `wwwroot/icons/app.svg` (aucun logo
+  ArtCraft) ; trois captures prises dans le Kazo OS 3.3.3 publié avec les modèles de départ de
+  FigCraft (`mobile-app`, `dashboard`, par `file.newFromTemplate`) et l'Explorateur de fichiers.
+- **README** refait sur la fiche (`npm run store:readme`, vérifié par la CI), lien « Essayer »
+  `https://os.kazo.ca/?autolaunch=ca.kazo.fig`.
+- **`THIRD-PARTY-NOTICES.md`** (fr, en), lié avec `LICENSE` dans le paquet (`wwwroot/legal/`) à côté
+  des avis de FigCraft (dont les 29 licences OFL) ; `LegalFilesTests`.
+- **`tests/installed`** : `kazopkg install` dans le Kazo OS 3.3.3 publié, un `.figcraft` enregistré
+  puis rouvert par double-clic, licences présentes, captures du Store : PASS. Paquet `.kazoapp` de
+  10,7 Mo, 25,9 Mo décompressé.
+- Version **0.1.0**. Après la fusion de `fig/base` dans `main` par Benoit : étiquette `v0.1.0`
+  (workflow « Tag a release »), PR du catalogue dans `Os-AppMarketPlace`, puis
+  `npm run test:installed -- --store` et la ligne de `features.md` de Kazo OS.
+
 ## Piste amont
 
 Textes préparés par Claude en anglais, publiés par Benoit (aucune mention d'agent, règles des
@@ -188,4 +210,5 @@ dépôts `storytold`) :
 - [x] Chantier 1 (`fig/1-solution`) : solution, manifeste, zip 0.18.1, fenêtre de démarrage sur le module, CI sur `main`.
 - [x] Chantier 2 (`fig/2-window`) : formats, onglets liés à leur fichier, enregistrer, Enregistrer sous, copies, fermeture, sélecteur, stockage par utilisateur.
 - [x] Chantier 3 (`fig/3-build-from-source`) : fork en sous-module, compilation avec `craft-fonts`, workflow, page compilée depuis les sources.
-- [ ] Chantier 4.
+- [x] Chantier 4 (`fig/4-store`) : OS 3.3.3 en Release, fiche, icône, captures, README, avis de tiers, installation dans l'OS publié.
+- [ ] Publication : `main`, étiquette `v0.1.0`, catalogue, `features.md`.
