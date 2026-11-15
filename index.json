@@ -2,6 +2,11 @@
   "appId": "ca.kazo.fig",
   "versions": [
     {
+      "version": "0.1.1-beta.1",
+      "path": "0.1.1-beta.1/ca.kazo.fig-0.1.1-beta.1.kazoapp",
+      "sha256": "d6324c06da68c66ddd6217ec1ab661042064030cdb612b974c86342e031d1412"
+    },
+    {
       "version": "0.1.0",
       "path": "0.1.0/ca.kazo.fig-0.1.0.kazoapp",
       "sha256": "a714de40bcc262f999cafd1beb6dbdb19ae92778fa0db967be4f17768afa871c"
