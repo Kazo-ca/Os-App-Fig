@@ -4,4 +4,4 @@
 
 | Document | Contenu |
 | --- | --- |
-| [`plan.md`](plan.md) | Étape 0 : lecture de FigCraft, décisions, questions, chantiers de la série `fig/base` |
+| [`plan.md`](plan.md) | Étape 0 : lecture de FigCraft, décisions, questions, chantiers de la série `fig/base` ; workflows partagés et canaux de publication |

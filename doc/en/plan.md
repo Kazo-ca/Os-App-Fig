@@ -193,6 +193,21 @@ submodule was already on it (`b5bb8af`).
   workflow), catalog PR in `Os-AppMarketPlace`, then `npm run test:installed -- --store` and the
   Kazo OS `features.md` row.
 
+## Shared workflows and release channels (2026-11-15)
+
+Work item 7 of Kazo OS's `release-channels` series (ADR 0271), branch
+`release-channels/7-shared-workflows`:
+
+| File | Role |
+| --- | --- |
+| `ci.yml`, `publish-packages.yml`, `publish-to-kazoos-store.yml`, `tag-release.yml` | one call each to the shared workflow `Kazo-ca/Os-AppTemplate/.github/workflows/kazoos-*.yml@v1`, with `app-directory: src/Kazo.Fig`; `ci.yml` keeps its `workflow_call` (`ref`) for Build FigCraft and runs on `main` and `beta` |
+| `sdk-update.yml` (new) | Kazo OS SDK update: `repository_dispatch` `kazoos-sdk-released` `{version, channel}`, every hour, or by hand; a pre-release goes to `beta` as `x.y.(z+1)-beta.<n>`, then to the `beta` branch of the catalog (from `submit/<appId>_<version>`); commits "Kazo OS SDK ..." |
+| `.github/scripts/bump-app-version.sh` (new) | copy of the template's script, run by the SDK update (`FigApp.Version` and `manifest.json`) |
+| `build-figcraft.yml` | unchanged: the pinned FigCraft build (Rust, Trunk 0.21.14, `craft-fonts` `37827ad`) is specific to this repository |
+
+Tokens: the organisation secrets `KAZO_AUTOMATION_APP_ID`, `KAZO_AUTOMATION_APP_KEY` and
+`HACK_STORE_TOKEN` (`secrets: inherit`). No signing key in this repository.
+
 ## Upstream track
 
 Texts prepared by Claude in English, published by Benoit (no agent mention, `storytold` repository

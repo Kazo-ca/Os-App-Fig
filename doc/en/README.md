@@ -4,4 +4,4 @@
 
 | Document | Content |
 | --- | --- |
-| [`plan.md`](plan.md) | Step 0: reading FigCraft, decisions, questions, work items of the `fig/base` series |
+| [`plan.md`](plan.md) | Step 0: reading FigCraft, decisions, questions, work items of the `fig/base` series; shared workflows and release channels |
