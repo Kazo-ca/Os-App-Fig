@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Compiles FigCraft from the external/figcraft submodule (our fork Kazo-ca/figcraft, branch
-# kazo/v0.18.1; work item 3 of doc/en/plan.md) the way its release workflow builds the web zip, then
+# kazo/v0.19.0; work item 3 of doc/en/plan.md) the way its release workflow builds the web zip, then
 # vendors the result in src/Kazo.Fig/wwwroot/figcraft/ with tools/vendor-figcraft.sh --dir. The
 # .github/workflows/build-figcraft.yml workflow runs it; it also runs on a developer machine.
 #
@@ -16,7 +16,7 @@ set -euo pipefail
 # The Trunk version of FigCraft's release workflow (craft-common-actions, install-trunk).
 trunk_version="0.21.14"
 # The craft-fonts revision of FigCraft's release workflow (.github/workflows/release.yml of the
-# v0.18.1 commit, craft-fonts-ref).
+# v0.19.0 commit, craft-fonts-ref).
 craft_fonts_ref="37827adc41fd165f9a9234ac40f94dbad353aa69"
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -37,7 +37,7 @@ done
 fonts_dir="$(cd "$fonts_dir" && pwd)"
 # The fonts embedded in the .wasm must be the release's: the provenance records this revision.
 actual_fonts="$(git -C "$fonts_dir" rev-parse HEAD 2>/dev/null)" || fail "$fonts_dir is not a git checkout of craft-fonts"
-[[ "$actual_fonts" == "$craft_fonts_ref" ]] || fail "craft-fonts is at $actual_fonts; FigCraft 0.18.1's release uses $craft_fonts_ref"
+[[ "$actual_fonts" == "$craft_fonts_ref" ]] || fail "craft-fonts is at $actual_fonts; FigCraft 0.19.0's release uses $craft_fonts_ref"
 [[ -z "$(git -C "$fonts_dir" status --porcelain)" ]] || fail "$fonts_dir has local changes"
 
 [[ -f "$figcraft/Cargo.toml" ]] || fail "external/figcraft is empty. Run: git submodule update --init external/figcraft"

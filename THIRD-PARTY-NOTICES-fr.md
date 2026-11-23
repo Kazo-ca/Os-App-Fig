@@ -14,7 +14,7 @@ Il embarque une seule œuvre de tiers, **FigCraft**, qui apporte ses propres él
 | | |
 | --- | --- |
 | Œuvre | [FigCraft](https://github.com/storytold/figcraft), un outil de design d'interfaces écrit en Rust, de l'équipe ArtCraft et des contributeurs de FigCraft |
-| Version | 0.18.1, compilée depuis notre fork [`Kazo-ca/figcraft`](https://github.com/Kazo-ca/figcraft) (branche `kazo/v0.18.1`, l'étiquette amont, sans modification) |
+| Version | 0.19.0, compilée depuis notre fork [`Kazo-ca/figcraft`](https://github.com/Kazo-ca/figcraft) (branche `kazo/v0.19.0`, commit amont `80c8d38` « Release: FigCraft v0.19.0 » de la branche `release`, sans étiquette amont, sans modification) |
 | Licence | MIT ou Apache-2.0, au choix de l'utilisateur |
 | Fichiers | `src/Kazo.Fig/wwwroot/figcraft/` (la page web compilée : `.js`, `.wasm`, `snippets/`) |
 | Provenance | `src/Kazo.Fig/wwwroot/figcraft/figcraft.json` : le commit du fork, la révision de craft-fonts, les compilateurs et le SHA-256 de chaque fichier |

@@ -18,9 +18,11 @@
 set -euo pipefail
 
 # The pinned release. Moving to another version changes these three lines, in a PR.
-version="0.18.1"
+version="0.19.0"
 zip_url="https://github.com/storytold/figcraft/releases/download/v${version}/figcraft-web-${version}.zip"
-zip_sha256="2fbeb93f5022b0a7cc9d8528f1ed7e2b54c94d213ef79e65128aa898c399f02b"
+# FigCraft 0.19.0 has no tag nor release zip upstream yet (taken from the `release` branch): only
+# the source build (--dir) works until the official zip exists and its SHA-256 goes here.
+zip_sha256=""
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 target="$repo_root/src/Kazo.Fig/wwwroot/figcraft"
@@ -73,6 +75,7 @@ if [[ -n "$build_dir" ]]; then
                   in_pkg && $1 == "version" { gsub(/[" ]/, "", $3); print $3; exit }' "$submodule/Cargo.toml")"
   [[ -n "$version" ]] || fail "no [workspace.package] version in external/figcraft/Cargo.toml"
 else
+  [[ -n "$zip_sha256" ]] || fail "No official FigCraft $version zip is pinned; build from source (tools/build-figcraft.sh)"
   if [[ -z "$zip_file" ]]; then
     zip_file="$work/figcraft-web-${version}.zip"
     echo "Downloading $zip_url"
