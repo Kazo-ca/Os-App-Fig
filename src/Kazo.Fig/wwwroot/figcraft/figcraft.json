@@ -1,15 +1,15 @@
 {
-  "version": "0.18.1",
+  "version": "0.19.0",
   "source": {
     "kind": "source-build",
     "repository": "https://github.com/Kazo-ca/figcraft.git",
-    "commit": "4acc293c2ec941ac1400837ee7e3ab51780399f8",
+    "commit": "80c8d3871229d4248009d12bc5fac27e4d84e644",
     "craftFonts": "37827adc41fd165f9a9234ac40f94dbad353aa69",
     "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)",
     "trunk": "0.21.14"
   },
-  "glue": "figcraft-web-6fceffc05accf13b.js",
-  "wasm": "figcraft-web-6fceffc05accf13b_bg.wasm",
+  "glue": "figcraft-web-ee2fc80b56bdde8.js",
+  "wasm": "figcraft-web-ee2fc80b56bdde8_bg.wasm",
   "files": [
     { "path": "LICENSE-APACHE", "size": 10174, "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594" },
     { "path": "LICENSE-MIT", "size": 1100, "sha256": "360c12b61568ef50808e731c98ae84110ea6f674dc34ac1ecb05d7abb9a6079a" },
@@ -43,8 +43,8 @@
     { "path": "OFL-shippori-mincho.txt", "size": 4399, "sha256": "41fba056279be5f45ff9a99e44b7b53897b42732f5806d8e666e0ab49ac6bd38" },
     { "path": "OFL-source-sans-3.txt", "size": 4579, "sha256": "89ad2c4f66dd29127527493e729c31e731f111cf10faf5774c3db9275ed0c22c" },
     { "path": "OFL-source-serif-4.txt", "size": 4492, "sha256": "75784a295293a8992f5a8d99210566e0064a012e6dab6731305e3787f15896c7" },
-    { "path": "figcraft-web-6fceffc05accf13b.js", "size": 187654, "sha256": "363e0b0a339777ff2b8d1cd75eb9cf0d0f646a727285c2dc11a5d138f66f3e2c" },
-    { "path": "figcraft-web-6fceffc05accf13b_bg.wasm", "size": 25482145, "sha256": "a3dcc0386092a48c64946c79da7b64e8d70ba1c4d04f0d899029cb28b6648f01" },
+    { "path": "figcraft-web-ee2fc80b56bdde8.js", "size": 187187, "sha256": "52543c8050cdca679ec0eb5e82f7f95143d2cf3c7f822220ce8f64d7994da566" },
+    { "path": "figcraft-web-ee2fc80b56bdde8_bg.wasm", "size": 25913471, "sha256": "822cacf31f6e5a6506e311aad430fc67189de06dec6a8cae65a4fddd2a99e7da" },
     { "path": "snippets/eframe-d31a8450ea12dfc1/inline0.js", "size": 280, "sha256": "22a98f9d0c5a0532d291bdc9a3050439420b3d11143b4568fcfd3c66fff36995" }
   ]
 }

@@ -24,7 +24,7 @@ public sealed record FigSaveDecision(SaveAction Action, long? TabId, string TabN
 /// </summary>
 /// <remarks>
 /// <para>
-/// FigCraft 0.18.1 keeps one "host file" per page, not per tab: a File › Save of any tab is handed
+/// FigCraft (0.18.1, still in 0.19.0) keeps one "host file" per page, not per tab: a File › Save of any tab is handed
 /// over under the name of the file the window opened, with <c>saveAs: false</c>. Trusting that name
 /// would write another tab's design over the opened file. The window therefore binds each file to
 /// the tab it belongs to (the <c>id</c> of <c>doc.list</c>), and decides every save by the tab in

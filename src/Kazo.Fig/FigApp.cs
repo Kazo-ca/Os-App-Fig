@@ -47,7 +47,7 @@ public sealed class FigApp : AppDefinition
 
     /// <inheritdoc />
     /// <remarks>The tag that publishes to the Kazo OS Store must be v + this version.</remarks>
-    public override string Version => "0.1.2";
+    public override string Version => "0.2.0";
 
     /// <inheritdoc />
     /// <remarks>

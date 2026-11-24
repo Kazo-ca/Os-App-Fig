@@ -5,7 +5,7 @@ using Kazo.Os.AppSdk.Craft;
 namespace Kazo.Fig.Tests;
 
 /// <summary>
-/// Files bound to FigCraft's tabs (decision 7, Benoit's Q1 = A): FigCraft 0.18.1 hands every Save
+/// Files bound to FigCraft's tabs (decision 7, Benoit's Q1 = A): FigCraft (0.18.1, still in 0.19.0) hands every Save
 /// over under the opened file's name, whichever tab is in front; the window decides by the tab.
 /// </summary>
 public sealed class FigTabsTests

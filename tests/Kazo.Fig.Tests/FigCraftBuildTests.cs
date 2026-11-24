@@ -22,9 +22,9 @@ public sealed partial class FigCraftBuildTests
 
         if (kind == "release-zip")
         {
-            // tools/vendor-figcraft.sh without --dir: the pinned official zip.
-            Assert.Equal("0.18.1", Provenance.GetProperty("version").GetString());
-            Assert.Equal("2fbeb93f5022b0a7cc9d8528f1ed7e2b54c94d213ef79e65128aa898c399f02b", source.GetProperty("sha256").GetString());
+            // tools/vendor-figcraft.sh without --dir: the pinned official zip. FigCraft 0.19.0 has no
+            // official zip yet (untagged upstream), so the script refuses this path and no zip is pinned.
+            Assert.Fail("FigCraft 0.19.0 has no official zip pinned in tools/vendor-figcraft.sh; build from source.");
             return;
         }
 
@@ -48,7 +48,7 @@ public sealed partial class FigCraftBuildTests
     [Fact]
     public void The_wasm_stays_under_the_Kazo_OS_file_size_limit()
     {
-        // ADR 0245 of Kazo OS: 128 MiB per file. FigCraft 0.18.1 is 25.5 MB.
+        // ADR 0245 of Kazo OS: 128 MiB per file. FigCraft 0.19.0 is about 25.5 MB.
         const long maximumFileBytes = 128L * 1024 * 1024;
         FileInfo wasm = new(Path.Combine(BuildFolder, Provenance.GetProperty("wasm").GetString()!));
         Assert.InRange(wasm.Length, 1, maximumFileBytes);
